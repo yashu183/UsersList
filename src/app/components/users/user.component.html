@@ -1,0 +1,113 @@
+<div class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <a href="#" class="navbar-brand">Angular App</a>
+    </div>
+</div>
+
+<h3 class = "px-3 py-2">Users and their details</h3>
+
+<button (click) = "onClick({firstName : 'Added', lastName : 'through clicking', hide : 'true'})" [disabled] = 'showExtend' [ngClass] = 'currentClass' class="btn btn-block btn-primary mx-2 mb-3 w-90">Add New User</button>
+
+<div *ngIf = "showExtend">
+    <h4 class="text-center">Add New User</h4>
+    <form #userForm = "ngForm" action="#" (ngSubmit) = "onSubmit(u)" class="form-group container">
+        <label for="firstName">First Name</label>
+        <input
+        type="text" 
+        class="form-control"
+        [ngClass] = "{'is-invalid' : userFn.errors && userFn.touched}" 
+        [(ngModel)]="u.firstName"
+        #userFn = "ngModel" 
+        required
+        minlength = '3'
+        name="firstName">
+        <div [hidden] = "!userFn.errors?.required" class="invalid-feedback">First Name is required</div>    
+        <div [hidden] = "!userFn.errors?.minlength" class="invalid-feedback">Must be greaterthan 3 chars</div>
+        
+        <label for="lastName">Last Name</label>
+        <input 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="u.lastName" 
+        [ngClass] = "{'is-invalid' : userLn.errors && userLn.touched}"
+        #userLn = 'ngModel'
+        required
+        minlength = '4'
+        maxlength = '8'
+        name="lastName">
+        <div [hidden] = '!userLn.errors?.required' class="invalid-feedback">Last Name is required</div>
+        <div [hidden] = '!userLn.errors.minlength' class="invalid-feedback">Must be ggreaterthan 4 chars</div>
+        <div [hidden] = '!userLn.errors?.maxlength' class="invalid-feedback">Must be lessthan or equal to 8 chars</div>
+
+        <!-- <label for="age">Age</label>
+        <input type="number" class="form-control mb-2" [(ngModel)]="u.age" name="age">
+
+        <h5>Address</h5>
+        <label for="street">Street</label>
+        <input type="text" class="form-control" [(ngModel)]="u.address.street" name="street">
+
+        <label for="city">City</label>
+        <input type="text" class="form-control" [(ngModel)]="u.address.city" name="city">
+
+        <label for="balance">Balance</label>
+        <input type="number" class="form-control" [(ngModel)]="u.isBalance" name="balance">
+
+        <label for="joined">Joined Date</label>
+        <input type="text" class="form-control mb-3" placeholder="Fomat : 'mm/dd/yyyy'" [(ngModel)]="u.registered" name="joined"> -->
+
+        <label for="email">Email</label>
+        <input 
+        type="text" 
+        class="form-control" 
+        [(ngModel)]="u.email"
+        name = "email"
+        #useremail = "ngModel"
+        [ngClass]="{'is-invalid': useremail.errors && useremail.touched}"
+        required
+        pattern = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+        placeholder = "Enter ur email">
+        <div [hidden] = '!useremail.errors?.required' class="invalid-feedback">Email required</div>
+        <div [hidden] = '!useremail.errors?.pattern' class="invalid-feedback">Email is not valid</div>
+
+        <div class="form-control">
+            <button class="mt-3"  class="btn btn-primary btn-block form-control">Add User</button>
+        </div>
+
+        <!-- (click) = 'addUser()' [disabled] = "u.firstName == '' || u.lastName == ''" -->
+
+        <!-- [disabled] = "!userForm.form.valid" -->
+
+    </form>
+</div>
+
+<div class="container">
+    <div *ngFor = "let us of user" class="card-body">
+        <div class="row p-2" [style.border] = "us.isActive ? '2px solid #0d6efd' : ''">
+               
+            
+                <h3 [ngStyle] = "currentStyles" [class.mt-0] = "!isExpand">{{ us.firstName }} {{ us.lastName }} <small *ngIf = "us.age && us.address"><button (click) = "dataHide(us)" class="btn btn-primary btn-sm"><i [ngClass] = "us.hide ? 'fa fa-plus' : 'fa fa-minus'"></i></button></small> </h3>
+                <ul class="list-unstyled list-group" *ngIf = "!us.hide">
+                    <li class="list-group-item">Age : {{ us.age }}</li>
+                    <li class="list-group-item">Address : {{ us.address.street }} {{ us.address.city }}</li>
+                    <li class="list-group-item">Balance : {{ us.isBalance }}</li>
+                    <li class="list-group-item">Joined on : {{ us.registered | date : "longDate" }}</li>
+                </ul>
+        
+            
+        </div>
+    </div>
+</div>
+<small class="container text-muted">*The blue outline indicates that the user is active lately.*</small>
+<ng-template #no>
+<p>No users to display</p>
+</ng-template>
+
+<ng-template #down>
+<h5>Age under 30</h5>
+</ng-template>
+
+<ng-template #notloaded>
+    <p>Loading users...</p>
+</ng-template>
+
+<!-- <h4 *ngIf = "user?.length == 0">No users fund</h4> -->
